@@ -70,18 +70,19 @@ func (s *productCommonSrv) Checkid(id int, t string) error {
 }
 
 // 校验productid和breedid的对应关系
-func (s *productCommonSrv) CheckidRelate(pid int, bid int) error {
+func (s *productCommonSrv) CheckidRelate(pid int, bid int) (*model.Product, error) {
 	// 校验pid
 	if e := s.Checkid(pid, "product"); e != nil {
-		return e
+		return nil, e
 	}
 	// 校验bid
 	if e := s.Checkid(bid, "breed"); e != nil {
-		return e
+		return nil, e
 	}
 	// 校验数据库的存储关系
 	if p, e := dao.Product.FindOne("id=? and upid=? and status=1", bid, pid); e != nil || p == nil {
-		return gerror.New("check fail")
+		return nil, gerror.New("check fail")
+	}else {
+		return p, nil
 	}
-	return nil
 }
