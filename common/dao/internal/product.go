@@ -12,7 +12,7 @@ import (
 	"github.com/gogf/gf/frame/gmvc"
 	"time"
 
-	"common/library/common/model"
+	"github.com/njun10/mylibrary/common/model"
 )
 
 // ProductDao is the manager for logic model data accessing

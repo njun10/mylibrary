@@ -5,7 +5,7 @@
 package internal
 
 import (
-	"common/library/common/model"
+	"github.com/njun10/mylibrary/common/model"
 	"context"
 	"database/sql"
 	"github.com/gogf/gf/database/gdb"
