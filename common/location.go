@@ -2,6 +2,8 @@ package lcommon
 
 import (
 	"github.com/gogf/gf/errors/gerror"
+	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
 	"github.com/gogf/gf/util/gvalid"
 	"github.com/njun10/mylibrary/common/dao"
 	"github.com/njun10/mylibrary/common/model"
@@ -34,16 +36,6 @@ func (s *locCommonSrv) GetChildsByid(id int) ([]*model.Location, error) {
 		return c, e
 	}
 	return nil, gerror.New("id error")
-}
-
-// 保内函数调用数据库的查询封装
-func (s *locCommonSrv) getInfoByid(id int) *model.Location {
-	if p, e := dao.Location.FindOne("id=? and status=1", id); e != nil {
-		return nil
-	} else {
-		return p
-	}
-
 }
 
 // 通过ID查询位置信息
@@ -88,4 +80,49 @@ func (s *locCommonSrv) Checkid(id int, l int) error {
 	}
 
 	return nil
+}
+
+// 根据ID获取全路径
+func (s *locCommonSrv) PathAllByid(id int) ([]*model.Location, error) {
+	if e := s.Checkid(id, 0); e != nil {
+		return nil, gerror.New("check id err")
+	}
+
+	if res := s.getInfoByid(id); res == nil {
+		return nil, gerror.New("no info")
+	} else {
+		path := gstr.Explode(".", res.Path)
+		ids := make([]int, len(path))
+		if e := gconv.MapToMap(path, ids); e!=nil {
+			return nil, e
+		}
+		if all := s.BatchByids(ids); all==nil {
+			return nil, gerror.New("batch info err")
+		}else{
+			return all, nil
+		}
+	}
+}
+
+// 包内函数调用数据库的查询封装
+func (s *locCommonSrv) getInfoByid(id int) *model.Location {
+	if p, e := dao.Location.FindOne("id=? and status=1", id); e != nil {
+		return nil
+	} else {
+		return p
+	}
+
+}
+
+// 包内函数调用数据库的查询封装
+func (s *locCommonSrv) BatchByids(ids []int) []*model.Location {
+	if len(ids) == 0 {
+		return nil
+	}
+	strids := make([]string, len(ids))
+	if p, e := dao.Location.FindAll("id in (?) and status=1", gstr.Implode(",",strids)); e != nil {
+		return nil
+	} else {
+		return p
+	}
 }
