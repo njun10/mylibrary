@@ -120,6 +120,9 @@ func (s *locCommonSrv) BatchByids(ids []int) []*model.Location {
 		return nil
 	}
 	strids := make([]string, len(ids))
+	if e := gconv.MapToMap(ids, &strids); e!=nil {
+		return nil
+	}
 	if p, e := dao.Location.FindAll("id in (?) and status=1", gstr.Implode(",",strids)); e != nil {
 		return nil
 	} else {
