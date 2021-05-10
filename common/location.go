@@ -93,7 +93,7 @@ func (s *locCommonSrv) PathAllByid(id int) ([]*model.Location, error) {
 	} else {
 		path := gstr.Explode(".", res.Path)
 		ids := make([]int, len(path))
-		if e := gconv.MapToMap(path, ids); e!=nil {
+		if e := gconv.MapToMap(path, &ids); e!=nil {
 			return nil, e
 		}
 		if all := s.BatchByids(ids); all==nil {
