@@ -92,9 +92,9 @@ func (s *locCommonSrv) PathAllByid(id int) ([]*model.Location, error) {
 		return nil, gerror.New("no info")
 	} else {
 		path := gstr.Explode(".", res.Path)
-		ids := make([]int, len(path))
-		if e := gconv.MapToMap(path, &ids); e!=nil {
-			return nil, e
+		ids := gconv.SliceInt(path)
+		if ids == nil {
+			return nil, gerror.New("path all get ids err")
 		}
 		if all := s.BatchByids(ids); all==nil {
 			return nil, gerror.New("batch info err")
@@ -119,7 +119,7 @@ func (s *locCommonSrv) BatchByids(ids []int) []*model.Location {
 	if len(ids) == 0 {
 		return nil
 	}
-	strids := make([]string, len(ids))
+	strids := gconv.SliceStr(ids)
 	if e := gconv.MapToMap(ids, &strids); e!=nil {
 		return nil
 	}
