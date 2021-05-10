@@ -1,6 +1,7 @@
 package lcommon
 
 import (
+	"fmt"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/text/gstr"
 	"github.com/gogf/gf/util/gconv"
@@ -120,7 +121,7 @@ func (s *locCommonSrv) BatchByids(ids []int) []*model.Location {
 		return nil
 	}
 	strids := gconv.SliceStr(ids)
-	if p, e := dao.Location.FindAll("id in (?) and status=1", gstr.Implode(",",strids)); e != nil {
+	if p, e := dao.Location.FindAll(fmt.Sprintf("id in (%s) and status=1", gstr.Implode(",",strids))); e != nil {
 		return nil
 	} else {
 		return p

@@ -1,7 +1,10 @@
 package lcommon
 
 import (
+	"fmt"
 	"github.com/gogf/gf/errors/gerror"
+	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
 	"github.com/njun10/mylibrary/common/dao"
 	"github.com/njun10/mylibrary/common/model"
 )
@@ -36,4 +39,17 @@ func (s *marketCommonSrv) CheckidExit(id int, t string) error {
 		return gerror.New("id not exit")
 	}
 	return nil
+}
+
+// 包内函数调用数据库的查询封装
+func (s *marketCommonSrv) BatchByids(ids []int) []*model.MarketInfo {
+	if len(ids) == 0 {
+		return nil
+	}
+	strids := gconv.SliceStr(ids)
+	if p, e := dao.MarketInfo.FindAll(fmt.Sprintf("id in (%s) and status=1", gstr.Implode(",",strids))); e != nil {
+		return nil
+	} else {
+		return p
+	}
 }

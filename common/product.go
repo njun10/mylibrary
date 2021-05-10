@@ -1,7 +1,10 @@
 package lcommon
 
 import (
+	"fmt"
 	"github.com/gogf/gf/errors/gerror"
+	"github.com/gogf/gf/text/gstr"
+	"github.com/gogf/gf/util/gconv"
 	"github.com/gogf/gf/util/gvalid"
 	"github.com/njun10/mylibrary/common/dao"
 	"github.com/njun10/mylibrary/common/model"
@@ -84,5 +87,18 @@ func (s *productCommonSrv) CheckidRelate(pid int, bid int) (*model.Product, erro
 		return nil, gerror.New("check fail")
 	}else {
 		return p, nil
+	}
+}
+
+// 包内函数调用数据库的查询封装
+func (s *productCommonSrv) BatchByids(ids []int) []*model.Product {
+	if len(ids) == 0 {
+		return nil
+	}
+	strids := gconv.SliceStr(ids)
+	if p, e := dao.Product.FindAll(fmt.Sprintf("id in (%s) and status=1", gstr.Implode(",",strids))); e != nil {
+		return nil
+	} else {
+		return p
 	}
 }
