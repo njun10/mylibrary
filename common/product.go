@@ -102,3 +102,26 @@ func (s *productCommonSrv) BatchByids(ids []int) []*model.Product {
 		return p
 	}
 }
+
+
+// 包内函数调用数据库的查询封装
+func (s *productCommonSrv) BatchByNames(names []string) []*model.Product {
+	if len(names) == 0 {
+		return nil
+	}
+	if p, e := dao.Product.FindAll(fmt.Sprintf("name in ('%s') and status=1", gstr.Implode("','",names))); e != nil {
+		return nil
+	} else {
+		return p
+	}
+}
+
+// 包内函数调用数据库的查询封装
+func (s *productCommonSrv) BatchAll() []*model.Product {
+	if p, e := dao.Product.FindAll(fmt.Sprintf("status=1")); e != nil {
+		return nil
+	} else {
+		return p
+	}
+}
+

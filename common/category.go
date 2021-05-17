@@ -1,6 +1,7 @@
 package lcommon
 
 import (
+	"fmt"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/util/gconv"
 	"github.com/njun10/mylibrary/common/dao"
@@ -30,6 +31,15 @@ func (s *cateCommonSrv) GetChildsByid(id int) ([]*model.Category, error) {
 		return p_conv(c), e
 	}
 	return nil, gerror.New("id error")
+}
+
+// 包内函数调用数据库的查询封装
+func (s *cateCommonSrv) BatchAllCate() []*model.Category {
+	if p, e := dao.Category.FindAll(fmt.Sprintf("status=1")); e != nil {
+		return nil
+	} else {
+		return p
+	}
 }
 
 func p_conv(arr []*model.Product) []*model.Category {

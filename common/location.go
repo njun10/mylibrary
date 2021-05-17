@@ -127,3 +127,24 @@ func (s *locCommonSrv) BatchByids(ids []int) []*model.Location {
 		return p
 	}
 }
+
+// 包内函数调用数据库的查询封装
+func (s *locCommonSrv) BatchByNames(names []string) []*model.Location {
+	if len(names) == 0 {
+		return nil
+	}
+	if p, e := dao.Location.FindAll(fmt.Sprintf("name in ('%s') and status=1", gstr.Implode("','",names))); e != nil {
+		return nil
+	} else {
+		return p
+	}
+}
+
+// 包内函数调用数据库的查询封装
+func (s *locCommonSrv) BatchAll() []*model.Location {
+	if p, e := dao.Location.FindAll(fmt.Sprintf("status=1")); e != nil {
+		return nil
+	} else {
+		return p
+	}
+}
