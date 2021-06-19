@@ -35,7 +35,7 @@ func (s *cateCommonSrv) GetChildsByid(id int) ([]*model.Category, error) {
 
 // 包内函数调用数据库的查询封装
 func (s *cateCommonSrv) BatchAllCate() []*model.Category {
-	if p, e := dao.Category.FindAll(fmt.Sprintf("status=1")); e != nil {
+	if p, e := dao.Category.Order("weight desc").FindAll(fmt.Sprintf("status=1")); e != nil {
 		return nil
 	} else {
 		return p
