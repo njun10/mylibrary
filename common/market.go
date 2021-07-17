@@ -24,6 +24,7 @@ func (s *marketCommonSrv) getInfoByid(id int) *model.MarketInfo {
 }
 
 func (s *marketCommonSrv) GetInfoBygeo(scope map[string]float64) []*model.MarketInfo {
+	
 	if p, e := dao.MarketInfo.FindAll("lat>? and lat<? and lng>? and lng<? and" +
 		" status=1", scope["minLat"], scope["maxLat"], scope["minLng"], scope["maxLng"]); e != nil {
 		return nil
